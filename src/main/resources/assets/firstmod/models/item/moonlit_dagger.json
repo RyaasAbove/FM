@@ -1,0 +1,21 @@
+{
+  "parent": "item/handheld",
+  "loader": "forge:separate_transforms",
+
+  "base": {
+    "parent": "firstmod:item/moonlit_dagger_gen"
+  },
+  "perspectives" : {
+    "gui": {
+      "parent": "firstmod:item/mldaggericon"
+    } ,
+    "ground": {
+      "parent": "firstmod:item/moonlit_dagger_gen"
+    } ,
+    "fixed": {
+      "parent": "firstmod:item/moonlit_dagger_gen"
+    }
+  }
+
+
+}

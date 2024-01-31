@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "firstmod:fries"
+    },
+    {
+      "item": "firstmod:burger"
+    },
+    {
+      "item": "firstmod:wizard_hat"
+    }
+  ],
+  "result": {
+    "item": "firstmod:bunger_spawn_egg"
+  }
+}

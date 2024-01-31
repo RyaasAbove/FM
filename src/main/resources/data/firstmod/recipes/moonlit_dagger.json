@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  N",
+    " S ",
+    "G  "
+  ],
+  "key": {
+    "N": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "S":{
+      "item": "minecraft:nether_star"
+    },
+    "G":{
+     "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "firstmod:moonlit_dagger",
+    "count": 1
+  }
+}

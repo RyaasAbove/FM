@@ -1,0 +1,30 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 2048,
+				"texture_height": 2048,
+				"visible_bounds_width": 25,
+				"visible_bounds_height": 25,
+				"visible_bounds_offset": [0, 0.5, 0]
+			},
+			"bones": [
+				{
+					"name": "Moon",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-151, -150, -151], "size": [300, 300, 300], "uv": [0, 0]},
+						{"origin": [-122, -120, -189], "size": [241, 241, 38], "uv": [1116, 600]},
+						{"origin": [-122, -120, -189], "size": [241, 241, 38], "pivot": [0, 0, 0], "rotation": [0, -90, 0], "uv": [900, 0]},
+						{"origin": [-122, -120, -189], "size": [241, 241, 38], "pivot": [0, 0, 0], "rotation": [0, -90, -90], "uv": [0, 600]},
+						{"origin": [-122, -120, -189], "size": [241, 241, 38], "pivot": [0, 0, 0], "rotation": [0, 180, 0], "uv": [558, 879]},
+						{"origin": [-122, -120, -189], "size": [241, 241, 38], "pivot": [0, 0, 0], "rotation": [-90, 0, 180], "uv": [558, 600]},
+						{"origin": [-122, -120, -189], "size": [241, 241, 38], "pivot": [0, 0, 0], "rotation": [0, 90, 0], "uv": [0, 879]}
+					]
+				}
+			]
+		}
+	]
+}
