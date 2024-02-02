@@ -9,6 +9,10 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class MainAbility {
+//    private final MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+//    private final Set<UUID> playersWithActiveAbility = new HashSet<>();
+//    private final Map<UUID, Entity> heldEntities = new HashMap<>();
+//
 
     public MainAbility(){
 
@@ -22,15 +26,17 @@ public class MainAbility {
 
     }
 
+
+
     public static void handle(MainAbility message, Supplier<NetworkEvent.Context> ctxSupplier) {
         NetworkEvent.Context ctx = ctxSupplier.get();
         ctx.enqueueWork(() -> {
             ServerPlayer player = ctx.getSender();
-            if (player != null) {
+
                 // Your logic here
                 Telekinesis telekinesis = FirstMod.getGameLogicManager().getTelekinesisHandler().getOrCreateTelekinesis(player);
                 telekinesis.activateAbility(player);
-            }
+
         });
         ctx.setPacketHandled(true);
     }

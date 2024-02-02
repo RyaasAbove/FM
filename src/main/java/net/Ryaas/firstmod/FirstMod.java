@@ -4,10 +4,12 @@ import com.mojang.logging.LogUtils;
 import net.Ryaas.firstmod.Networking.ModNetworking;
 import net.Ryaas.firstmod.block.ModBlocks;
 import net.Ryaas.firstmod.entity.client.*;
+import net.Ryaas.firstmod.event.ModEventsForge;
 import net.Ryaas.firstmod.item.ModCreativeModeTabs;
 import net.Ryaas.firstmod.item.ModItems;
 import net.Ryaas.firstmod.particles.ModParticles;
 import net.Ryaas.firstmod.util.ModGameLogicManager;
+import net.Ryaas.firstmod.util.TelekinesisHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -24,7 +26,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
 import software.bernie.geckolib.GeckoLib;
 
-import static net.Ryaas.firstmod.event.ModEventsForge.gameLogicManager;
+import static net.Ryaas.firstmod.event.ModEventsForge.telekinesisHandler;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(FirstMod.MOD_ID)
@@ -32,8 +34,14 @@ public class FirstMod
 {
     // Define mod id in a common place for everything to reference
     public static final String MOD_ID = "firstmod";
+    private static final ModGameLogicManager gameLogicManager = new ModGameLogicManager();
+
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
+
+    public static TelekinesisHandler getTelekinesisHandler() {
+        return telekinesisHandler;
+    }
     public FirstMod()
     {
 
@@ -59,6 +67,7 @@ public class FirstMod
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+
     public static ModGameLogicManager getGameLogicManager() {
         return gameLogicManager;
     }
@@ -70,6 +79,8 @@ public class FirstMod
         LOGGER.info("HELLO FROM COMMON SETUP");
         LOGGER.info("DIRT BLOCK >> {}", ForgeRegistries.BLOCKS.getKey(Blocks.DIRT));
         ModNetworking.register();
+        TelekinesisHandler telekinesisHandler = new TelekinesisHandler();
+        ModEventsForge.setTelekinesisHandler(telekinesisHandler);
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event){

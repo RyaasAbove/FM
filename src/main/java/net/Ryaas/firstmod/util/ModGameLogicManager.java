@@ -1,11 +1,14 @@
 package net.Ryaas.firstmod.util;
 
 public class ModGameLogicManager {
-    private final TelekinesisHandler telekinesisHandler = new TelekinesisHandler();
+    private static TelekinesisHandler telekinesisHandler = new TelekinesisHandler();
 
 
-    public TelekinesisHandler getTelekinesisHandler() {
+    public static TelekinesisHandler getTelekinesisHandler() {
         return telekinesisHandler;
+    }
+    public static void setTelekinesisHandler(TelekinesisHandler handler) {
+        telekinesisHandler = handler;
     }
 
 }
