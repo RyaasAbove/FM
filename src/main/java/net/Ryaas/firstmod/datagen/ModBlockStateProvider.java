@@ -1,7 +1,6 @@
 package net.Ryaas.firstmod.datagen;
 
 import net.Ryaas.firstmod.FirstMod;
-import net.Ryaas.firstmod.block.ModBlocks;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
@@ -15,7 +14,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        blockWithItem(ModBlocks.SALT_ORE);
+
 
 
     }

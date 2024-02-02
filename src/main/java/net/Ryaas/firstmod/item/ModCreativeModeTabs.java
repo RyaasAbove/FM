@@ -1,7 +1,6 @@
 package net.Ryaas.firstmod.item;
 
 import net.Ryaas.firstmod.FirstMod;
-import net.Ryaas.firstmod.block.ModBlocks;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -28,7 +27,7 @@ public class ModCreativeModeTabs {
                         pOutput.accept(ModItems.FRIES.get());
                         pOutput.accept(ModItems.BURGER.get());
                         pOutput.accept(ModItems.SALT.get());
-                        pOutput.accept(ModBlocks.SALT_ORE.get());
+
                     })
                     .build());
     public static void register(IEventBus eventBus){

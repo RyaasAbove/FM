@@ -12,7 +12,6 @@ import net.Ryaas.firstmod.util.ModGameLogicManager;
 import net.Ryaas.firstmod.util.TelekinesisHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -84,20 +83,7 @@ public class FirstMod
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event){
-        if(event.getTabKey() == CreativeModeTabs.FOOD_AND_DRINKS){
-            event.accept(ModItems.FRIES);
-            event.accept(ModItems.BURGER);
-            event.accept(ModItems.SALT);
-        }
 
-        if(event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS){
-            event.accept(ModBlocks.SALT_ORE);
-        }
-
-        if(event.getTabKey() == CreativeModeTabs.COMBAT){
-            event.accept((ModItems.SMOKE_BOMB));
-
-        }
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent

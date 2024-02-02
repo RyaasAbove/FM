@@ -20,9 +20,6 @@ public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS =
             DeferredRegister.create(ForgeRegistries.BLOCKS, FirstMod.MOD_ID);
 
-    public static final RegistryObject<Block> SALT_ORE = registerBlock("salt_ore",
-            () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.COAL_ORE).strength(2f).requiresCorrectToolForDrops(), UniformInt.of(3,7)) );
-
 
     public static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block){
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
