@@ -1,6 +1,5 @@
 package net.Ryaas.firstmod.entity.custom;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -66,7 +65,7 @@ public class Moon extends Ranged_Projectiles implements GeoEntity {
         double x;
         double y;
         double z;
-        Level level = Minecraft.getInstance().level;
+
         Vec3 position = this.position();
         x = position.x;
         y = position.y;
@@ -78,8 +77,8 @@ public class Moon extends Ranged_Projectiles implements GeoEntity {
             double offsetY = random.nextGaussian() * 0.2;
             double offsetZ = random.nextGaussian() * 0.2;
 
-            if(level != null){
-                level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, x, y, z, offsetX, offsetY, offsetZ);
+            if(world != null && world.isClientSide){
+                world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, x, y, z, offsetX, offsetY, offsetZ);
 
             }
 
@@ -110,19 +109,22 @@ public class Moon extends Ranged_Projectiles implements GeoEntity {
             livingEntity.hurt(damageSources().magic(), damage);
 //            livingEntity.invulnerableTime = 1;
             int numberOfParticles = 75;
+            if(world != null && world.isClientSide){
+                for (int i = 0; i < numberOfParticles; i++) {
+                    // Randomize the particle position a bit for natural effect
+                    double offsetX = random.nextGaussian() * 2;
+                    double offsetY = random.nextGaussian() * 1;
+                    double offsetZ = random.nextGaussian() * 2;
 
-            for (int i = 0; i < numberOfParticles; i++) {
-                // Randomize the particle position a bit for natural effect
-                double offsetX = random.nextGaussian() * 2;
-                double offsetY = random.nextGaussian() * 1;
-                double offsetZ = random.nextGaussian() * 2;
+                    // Spawn the particles
+                    world.addParticle(ParticleTypes.EXPLOSION,
+                            hitPosition.x + offsetX,
+                            hitPosition.y + offsetY,
+                            hitPosition.z + offsetZ,
+                            0, 0, 0);
+            }
 
-                // Spawn the particles
-                world.addParticle(ParticleTypes.EXPLOSION,
-                        hitPosition.x + offsetX,
-                        hitPosition.y + offsetY,
-                        hitPosition.z + offsetZ,
-                        0, 0, 0);
+
             }
         }
     }
@@ -161,19 +163,22 @@ public class Moon extends Ranged_Projectiles implements GeoEntity {
 
 
                 Vec3 moonPos = this.position();
-
-                for (int i = 0; i < numparticles; i++) {
-                    double angle = 2 * Math.PI * i / numparticles;
-                    double xOffset = Math.cos(angle) * radius;
-                    double zOffset = Math.sin(angle) * radius;
-
-
-                    double particleX = moonPos.x + xOffset;
-                    double particleY = moonPos.y; // Adjust if you want the particles higher or lower
-                    double particleZ = moonPos.z + zOffset;
+                if(world != null && world.isClientSide){
+                    for (int i = 0; i < numparticles; i++) {
+                        double angle = 2 * Math.PI * i / numparticles;
+                        double xOffset = Math.cos(angle) * radius;
+                        double zOffset = Math.sin(angle) * radius;
 
 
-                    world.addParticle(ParticleTypes.EXPLOSION, particleX, particleY, particleZ, 0, 0, 0);
+                        double particleX = moonPos.x + xOffset;
+                        double particleY = moonPos.y; // Adjust if you want the particles higher or lower
+                        double particleZ = moonPos.z + zOffset;
+
+
+                        world.addParticle(ParticleTypes.EXPLOSION, particleX, particleY, particleZ, 0, 0, 0);
+
+                    }
+
                 }
             }
         }
@@ -190,19 +195,22 @@ public class Moon extends Ranged_Projectiles implements GeoEntity {
         // Calculate a vector perpendicular to the entity's motion
         Vec3 perpendicularVec = new Vec3(-motionVec.z, 0, motionVec.x).normalize();
 
-        for (int i = 0; i < numberOfParticlesWidth; i++) {
-            for (int j = 0; j < numberOfParticlesHeight; j++) {
-                double factorWidth = (i / (double) numberOfParticlesWidth) - 0.5;
-                double factorHeight = (j / (double) numberOfParticlesHeight) - 0.5;
+        if(world != null && world.isClientSide){
+            for (int i = 0; i < numberOfParticlesWidth; i++) {
+                for (int j = 0; j < numberOfParticlesHeight; j++) {
+                    double factorWidth = (i / (double) numberOfParticlesWidth) - 0.5;
+                    double factorHeight = (j / (double) numberOfParticlesHeight) - 0.5;
 
-                Vec3 particlePos = entityPos.add(perpendicularVec.scale(factorWidth * width))
-                        .add(0, factorHeight * height, 0);
+                    Vec3 particlePos = entityPos.add(perpendicularVec.scale(factorWidth * width))
+                            .add(0, factorHeight * height, 0);
 
-                // Spawn the particle
-                world.addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE,
-                        particlePos.x, particlePos.y, particlePos.z,
-                        0, 0.05, 0); // Slight upward motion
-            }
+                    // Spawn the particle
+                    world.addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                            particlePos.x, particlePos.y, particlePos.z,
+                            0, 0.05, 0); // Slight upward motion
+
+                }
+        }
         }
 
 
@@ -212,7 +220,7 @@ public class Moon extends Ranged_Projectiles implements GeoEntity {
         this.setPos(this.getX() + currentMotion.x, this.getY() + currentMotion.y, this.getZ() + currentMotion.z);
 
 
-        if (!this.world.isClientSide) {
+        if (world != null && !this.world.isClientSide) {
 
 
 
@@ -256,14 +264,19 @@ public class Moon extends Ranged_Projectiles implements GeoEntity {
 
 
     private PlayState predicate(AnimationState<Moon> moonAnimationState) {
-        if (moonAnimationState.isMoving()) {
-            moonAnimationState.getController().setAnimation(RawAnimation.begin().then("boom", Animation.LoopType.LOOP));
-            return PlayState.CONTINUE;
+        if(world != null && world.isClientSide){
+            if (moonAnimationState.isMoving()) {
+                moonAnimationState.getController().setAnimation(RawAnimation.begin().then("boom", Animation.LoopType.LOOP));
+                return PlayState.CONTINUE;
+            }
+            else{
+                moonAnimationState.getController().setAnimation(RawAnimation.begin().then("Crumble", Animation.LoopType.LOOP));
+                return PlayState.CONTINUE;
+            }
         }
-        else{
-            moonAnimationState.getController().setAnimation(RawAnimation.begin().then("Crumble", Animation.LoopType.LOOP));
-            return PlayState.CONTINUE;
-        }
+
+
+        return PlayState.CONTINUE;
 
     }
 

@@ -3,6 +3,7 @@ package net.Ryaas.firstmod.Networking;
 import net.Ryaas.firstmod.FirstMod;
 import net.Ryaas.firstmod.Networking.packet.MainAbility;
 import net.Ryaas.firstmod.Networking.packet.MarkPacketc2s;
+import net.Ryaas.firstmod.Networking.packet.SecondaryAbility;
 import net.Ryaas.firstmod.Networking.packet.particlepacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -39,6 +40,12 @@ public class ModNetworking {
                 .decoder(MainAbility::new)
                 .encoder(MainAbility::toBytes)
                 .consumerMainThread(MainAbility::handle)
+                .add();
+
+        net.messageBuilder(SecondaryAbility.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(SecondaryAbility::new)
+                .encoder(SecondaryAbility::toBytes)
+                .consumerMainThread(SecondaryAbility::handle)
                 .add();
 
         net.messageBuilder(particlepacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)

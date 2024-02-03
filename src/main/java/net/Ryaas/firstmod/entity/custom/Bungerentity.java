@@ -38,7 +38,7 @@ public class Bungerentity extends TamableAnimal implements GeoEntity {
     private static final EntityDataAccessor<Boolean> SITTING =
             SynchedEntityData.defineId(Bungerentity.class, EntityDataSerializers.BOOLEAN);
 
-
+    private Level world;
 
 
     private AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
@@ -89,24 +89,28 @@ public class Bungerentity extends TamableAnimal implements GeoEntity {
     }
 
     private PlayState predicate(AnimationState<Bungerentity> bungerentityAnimationState) {
-        if(bungerentityAnimationState.isMoving()){
-            bungerentityAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.walk", Animation.LoopType.LOOP));
+
+        if (world != null && world.isClientSide) {
+            if (bungerentityAnimationState.isMoving()) {
+                bungerentityAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.walk", Animation.LoopType.LOOP));
+                return PlayState.CONTINUE;
+            }
+
+
+            if (this.isInSittingPose()) {
+                bungerentityAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.sit", Animation.LoopType.LOOP));
+                return PlayState.CONTINUE;
+            }
+
+            if (this.swinging) {
+                bungerentityAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.attack", Animation.LoopType.PLAY_ONCE));
+                return PlayState.CONTINUE;
+            }
+
+
+            bungerentityAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.idle", Animation.LoopType.LOOP));
             return PlayState.CONTINUE;
         }
-
-        if(this.isInSittingPose()){
-            bungerentityAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.sit", Animation.LoopType.LOOP));
-            return PlayState.CONTINUE;
-        }
-
-        if(this.swinging)
-        {
-            bungerentityAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.attack", Animation.LoopType.PLAY_ONCE));
-            return PlayState.CONTINUE;
-        }
-
-
-        bungerentityAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.idle", Animation.LoopType.LOOP));
         return PlayState.CONTINUE;
     }
 
@@ -117,23 +121,32 @@ public class Bungerentity extends TamableAnimal implements GeoEntity {
 
     @Nullable
     @Override
-    protected SoundEvent getAmbientSound(){
-        return SoundEvents.CANDLE_AMBIENT;
+    protected SoundEvent getAmbientSound() {
+        if (world != null && world.isClientSide) {
+            return SoundEvents.CANDLE_AMBIENT;
+        }
+        return null;
     }
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource pDamageSource){
+        if (world != null && world.isClientSide) {
         return SoundEvents.EVOKER_HURT;
-    }
+            }
+        return null;
+        }
     @Nullable
     @Override
-    protected SoundEvent getDeathSound(){
-        return SoundEvents.BEE_DEATH;
+    protected SoundEvent getDeathSound() {
+        if (world != null && world.isClientSide) {
+            return SoundEvents.BEE_DEATH;
+        }
+        return null;
     }
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         Item item = itemstack.getItem();
-        if (this.level().isClientSide) {
+        if (world != null && world.isClientSide) {
             boolean flag = this.isOwnedBy(player) || this.isTame() || itemstack.is(Items.POTATO) && !this.isTame();
             return flag ? InteractionResult.CONSUME : InteractionResult.PASS;
         } else if (this.isTame()) {

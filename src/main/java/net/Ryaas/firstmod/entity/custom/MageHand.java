@@ -1,7 +1,6 @@
 package net.Ryaas.firstmod.entity.custom;
 
 import net.Ryaas.firstmod.entity.client.ModEntities;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -77,7 +76,7 @@ public class MageHand extends Ranged_Projectiles implements GeoEntity {
         double x;
         double y;
         double z;
-        Level level = Minecraft.getInstance().level;
+
         Vec3 position = this.position();
         x = position.x;
         y = position.y;
@@ -89,8 +88,8 @@ public class MageHand extends Ranged_Projectiles implements GeoEntity {
             double offsetY = random.nextGaussian() * 0.2;
             double offsetZ = random.nextGaussian() * 0.2;
 
-            if(level != null){
-                level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, x, y, z, offsetX, offsetY, offsetZ);
+            if(world != null && world.isClientSide){
+                world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, x, y, z, offsetX, offsetY, offsetZ);
 
             }
 
@@ -104,27 +103,7 @@ public class MageHand extends Ranged_Projectiles implements GeoEntity {
 
     }
 
-//    private void spawnParticleAt(Entity entity) {
-//        Vec3 motion = entity.getDeltaMovement();
-//        Vec3 position = entity.position();
-//
-//        Level level = Minecraft.getInstance().level;
-//        for (int i = 0; i < 5; i++) {
-//            double offsetX = random.nextGaussian() * 0.2;
-//            double offsetY = random.nextGaussian() * 0.2;
-//            double offsetZ = random.nextGaussian() * 0.2;
-//
-//            double scale = 0.3;
-//
-//            Vec3 particlePos = new Vec3(position.x + offsetX * scale, position.y + offsetY * scale, position.z + offsetZ * scale);
-//            Vec3 particleMotion = new Vec3(motion.x * 0.1, motion.y * 0.1, motion.z * 0.1);
-//            if(level != null){
-//                ((ClientLevel) level).addParticle(ParticleTypes.SOUL_FIRE_FLAME, particlePos.x, particlePos.y, particlePos.z, particleMotion.x, particleMotion.y, particleMotion.z);
-//
-//            }
-//        }
-//    }
-//
+
 
     @Override
     public void impactparticles(double x, double y, double z) {
@@ -187,107 +166,7 @@ public class MageHand extends Ranged_Projectiles implements GeoEntity {
 
             Vec3 velocity = livingEntity.getDeltaMovement();
             int hitCount = data.getInt("hitCount");
-//            if(hitCount == 1){
 //
-//                //Rising proj
-//                livingEntity.invulnerableTime = 0;
-//                MageHand risingShot = new MageHand(ModEntities.MAGE_HAND.get(), world);
-//                Vec3 targetPos = livingEntity.position();
-//                risingShot.setPos(targetPos.x, targetPos.y - 1.0, targetPos.z);
-//                livingEntity.knockback(50, motion.x, motion.z);
-//                risingShot.setDeltaMovement(new Vec3(0, 3.0, 0));
-//                livingEntity.setDeltaMovement(velocity.x, 80, velocity.z);
-//                world.addFreshEntity(risingShot);
-//                livingEntity.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 60, 0));
-//                data.putBoolean("HitByRisingProjectile", true);
-//
-//                //Slash
-//
-//
-//                    Vec3 entityPos = target.position();
-//
-//                    if(livingEntity.getDeltaMovement().y > 0.1)
-//                    {
-//                        double entityHeight = target.getBbHeight();
-//                        double entityWidth = target.getBbWidth();
-//
-//                        // Calculate start and end points of the slash
-//                        Vec3 startPoint = entityPos.add(-entityWidth / 2, entityHeight / 2, 0);
-//                        Vec3 endPoint = entityPos.add(entityWidth / 2, entityHeight / 2, 0);
-//
-//                        // Number of particles to spawn along the path
-//                        int particleCount = 10;
-//
-//                        for (int i = 0; i < particleCount; i++) {
-//                            double t = i / (double) particleCount;
-//                            Vec3 particlePos = startPoint.lerp(endPoint, t);
-//                            Level world = Minecraft.getInstance().level;
-//                            world.addParticle(ParticleTypes.SMOKE,
-//                                    particlePos.x, particlePos.y, particlePos.z,
-//                                    0, 0, 0); // No motion for particles
-//                            world.addParticle(ParticleTypes.SMOKE,
-//                                    particlePos.x, particlePos.y, particlePos.z,
-//                                    0, 0, 0); // No motion for particles
-//                            world.addParticle(ParticleTypes.SMOKE,
-//                                    particlePos.x, particlePos.y, particlePos.z,
-//                                    0, 0, 0); // No motion for particles
-//                            world.addParticle(ParticleTypes.SMOKE,
-//                                    particlePos.x, particlePos.y, particlePos.z,
-//                                    0, 0, 0); // No motion for particles
-//                            world.addParticle(ParticleTypes.SMOKE,
-//                                    particlePos.x, particlePos.y, particlePos.z,
-//                                    0, 0, 0); // No motion for particles
-//
-//                        }
-//                        livingEntity.hurt(damageSources().magic(), damage);
-//                    }
-//
-//
-//                decrementHitCount(livingEntity, HIT_COUNT_KEY);
-//            }
-//            if(hitCount == 2){
-//                Vec3 startPos = livingEntity.position();
-//                initialPositions.put(livingEntity, startPos);
-//                data.putBoolean("Carried", true);
-//                Vec3 knockbackDirection = motion.normalize().scale(knockbackStrength * 2);
-//                livingEntity.setDeltaMovement(knockbackDirection);
-//
-//
-//            }
-//            if(hitCount == 3){
-//                livingEntity.invulnerableTime = 0;
-//                createTornadoEffect(livingEntity);
-//                data.putBoolean("Stormshot",true);
-//                spawnNextMageHand(livingEntity);
-//                decrementHitCount(livingEntity, HIT_COUNT_KEY);
-//            }
-//            if(hitCount == 1){
-//                livingEntity.invulnerableTime = 0;
-//                MageHand risingShot = new MageHand(ModEntities.MAGE_HAND.get(), world);
-//                Vec3 targetPos = livingEntity.position();
-//                risingShot.setPos(targetPos.x, targetPos.y - 1.0, targetPos.z);
-//                livingEntity.knockback(2, motion.x, motion.z);
-//                risingShot.setDeltaMovement(new Vec3(0, 1.0, 0));
-//                livingEntity.setDeltaMovement(new Vec3(0, 1.0, 0));
-//                world.addFreshEntity(risingShot);
-//                decrementHitCount(livingEntity, HIT_COUNT_KEY);
-//            }
-//            if(hitCount == 5){
-//                livingEntity.invulnerableTime = 0;
-//                MageHand risingShot = new MageHand(ModEntities.MAGE_HAND.get(), world);
-//                Vec3 targetPos = livingEntity.position();
-//                risingShot.setPos(targetPos.x, targetPos.y - 1.0, targetPos.z);
-//                livingEntity.knockback(2, motion.x, motion.z);
-//                risingShot.setDeltaMovement(new Vec3(0, 1.0, 0));
-//                livingEntity.setDeltaMovement(new Vec3(0, 3.0, 0));
-//                world.addFreshEntity(risingShot);
-//                decrementHitCount(livingEntity, HIT_COUNT_KEY);
-//            }
-//
-//            //THIS CODE CARRIES ENTITIES
-////            Vec3 knockbackDirection = motion.normalize().scale(knockbackStrength);
-////            livingEntity.setDeltaMovement(knockbackDirection);
-//        }
 
         }
 
@@ -304,12 +183,7 @@ public class MageHand extends Ranged_Projectiles implements GeoEntity {
         BlockPos target = hitResult.getBlockPos();
         Vec3 hitPosition = hitResult.getLocation();
 
-        // Implement logic for what happens when the projectile hits an entity
 
-        // Spawn impact particles at the hit position
-//        impactparticles(hitPosition.x, hitPosition.y, hitPosition.z);
-
-        // Perform any other actions on hitting an entity
     }
 
     public static void decrementHitCount(LivingEntity entity, String key) {
@@ -319,23 +193,7 @@ public class MageHand extends Ranged_Projectiles implements GeoEntity {
         entity.addAdditionalSaveData(entityData);
     }
 
-//    public void spawnFallingMageHands(Entity target) {
-//        Level world = Minecraft.getInstance().level;
-//        Vec3 targetPos = target.position();
-//        double heightAboveTarget = 10.0; // Height above the target to spawn the projectiles
 //
-//        for (int i = 0; i < 5; i++) {
-//            MageHand mageHand = new MageHand(ModEntities.MAGE_HAND.get(), world);
-//            double xOffset = (Math.random() - 0.5) * 3.0; // Random horizontal offset
-//            double zOffset = (Math.random() - 0.5) * 3.0; // Random horizontal offset
-//
-//            Vec3 spawnPosition = targetPos.add(xOffset, heightAboveTarget, zOffset);
-//            mageHand.setPos(spawnPosition.x, spawnPosition.y, spawnPosition.z);
-//            mageHand.setDeltaMovement(0, -0.5, 0); // Set downward motion
-//
-//            world.addFreshEntity(mageHand);
-//        }
-//    }
 
     private void spawnNextMageHand(Entity target) {
         double stormRadius = 5.0;
@@ -357,15 +215,7 @@ public class MageHand extends Ranged_Projectiles implements GeoEntity {
 
                 world.addFreshEntity(mageHand);
                 CompoundTag data = target.getPersistentData();
-//            if(data.contains("Stormshot")){
-//                data.remove("Stormshot");
-//                data.putBoolean("Stormshot2", true);
-//                spawnNextMageHand(target);
-//            }
-//            if(data.contains("Stormshot2")){
-//                spawnNextMageHand(target);
-//                data.remove("Stormshot2");
-//            }
+//
         }
 
 
@@ -381,7 +231,7 @@ public class MageHand extends Ranged_Projectiles implements GeoEntity {
 
         Vec3 currentMotion = this.getDeltaMovement();
         this.setPos(this.getX() + currentMotion.x, this.getY() + currentMotion.y, this.getZ() + currentMotion.z);
-        if(!this.world.isClientSide){
+        if(world != null && !world.isClientSide  ){
 
 
             //contact
@@ -393,7 +243,7 @@ public class MageHand extends Ranged_Projectiles implements GeoEntity {
 
 
             AABB collisionBox = this.getBoundingBox();
-            List<Entity> nearbyEntities = this.world.getEntitiesOfClass(Entity.class, collisionBox.inflate(0.5), e -> e != this && e.isAlive());
+            List<Entity> nearbyEntities = world.getEntitiesOfClass(Entity.class, collisionBox.inflate(0.5), e -> e != this && e.isAlive());
 
             for (Entity entity : nearbyEntities) {
                 if (collisionBox.intersects(entity.getBoundingBox())) {
@@ -465,13 +315,17 @@ public class MageHand extends Ranged_Projectiles implements GeoEntity {
     protected void collidedWithBlock(BlockState blockState, BlockPos blockPos,Entity entity) {
         // Apply damage to the entity
         entity.hurt(damageSources().inWall(), 5.0F);  // Damage amount can be adjusted
+        if(world != null && world.isClientSide  ){
+
+
         world.addParticle(ParticleTypes.EXPLOSION, blockPos.getX(), blockPos.getY(), blockPos.getZ(), 0, 0, 0);
 
         // Additional logic for collision with a block
-    }
+        }
 
+    }
     public void createTornadoEffect(Entity entity) {
-        Level level = Minecraft.getInstance().level;
+
         Vec3 entityPos = entity.position();
         double radius = 2.0; // Radius of the tornado
         int height = 15; // Height of the tornado
@@ -481,7 +335,7 @@ public class MageHand extends Ranged_Projectiles implements GeoEntity {
 
 
 
-        if(level != null){
+        if(world != null && world.isClientSide){
             for (int w = 0; w < height; w++) {
                 double yOffset = w * 1.5; // Vertical spacing between layers
 
@@ -497,7 +351,7 @@ public class MageHand extends Ranged_Projectiles implements GeoEntity {
                         double y = entityPos.y + yOffset;
                         double z = entityPos.z + zOffset;
 
-                        level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, x, y, z, 0, 0, 0);
+                        world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, x, y, z, 0, 0, 0);
                     }
                 }
             }
@@ -511,40 +365,42 @@ public class MageHand extends Ranged_Projectiles implements GeoEntity {
 
         Vec3 entityPos = entity.position();
 
-        if(entity.getDeltaMovement().y > 0.1)
-        {
+        if(entity.getDeltaMovement().y > 0.1) {
             double entityHeight = entity.getBbHeight();
             double entityWidth = entity.getBbWidth();
 
             // Calculate start and end points of the slash
             Vec3 startPoint = entityPos.add(-entityWidth / 2, entityHeight / 2, 0);
             Vec3 endPoint = entityPos.add(entityWidth / 2, entityHeight / 2, 0);
+            if (world.isClientSide && world != null) {
+                // Number of particles to spawn along the path
+                int particleCount = 10;
 
-            // Number of particles to spawn along the path
-            int particleCount = 10;
+                for (int i = 0; i < particleCount; i++) {
+                    double t = i / (double) particleCount;
+                    Vec3 particlePos = startPoint.lerp(endPoint, t);
 
-            for (int i = 0; i < particleCount; i++) {
-                double t = i / (double) particleCount;
-                Vec3 particlePos = startPoint.lerp(endPoint, t);
-                Level world = Minecraft.getInstance().level;
-                world.addParticle(ParticleTypes.LARGE_SMOKE,
-                        particlePos.x, particlePos.y, particlePos.z,
-                        0, 0, 0); // No motion for particles
-                world.addParticle(ParticleTypes.LARGE_SMOKE,
-                        particlePos.x, particlePos.y, particlePos.z,
-                        0, 0, 0); // No motion for particles
-                world.addParticle(ParticleTypes.LARGE_SMOKE,
-                        particlePos.x, particlePos.y, particlePos.z,
-                        0, 0, 0); // No motion for particles
-                world.addParticle(ParticleTypes.LARGE_SMOKE,
-                        particlePos.x, particlePos.y, particlePos.z,
-                        0, 0, 0); // No motion for particles
-                world.addParticle(ParticleTypes.LARGE_SMOKE,
-                        particlePos.x, particlePos.y, particlePos.z,
-                        0, 0, 0); // No motion for particles
+                    world.addParticle(ParticleTypes.LARGE_SMOKE,
+                            particlePos.x, particlePos.y, particlePos.z,
+                            0, 0, 0); // No motion for particles
+                    world.addParticle(ParticleTypes.LARGE_SMOKE,
+                            particlePos.x, particlePos.y, particlePos.z,
+                            0, 0, 0); // No motion for particles
+                    world.addParticle(ParticleTypes.LARGE_SMOKE,
+                            particlePos.x, particlePos.y, particlePos.z,
+                            0, 0, 0); // No motion for particles
+                    world.addParticle(ParticleTypes.LARGE_SMOKE,
+                            particlePos.x, particlePos.y, particlePos.z,
+                            0, 0, 0); // No motion for particles
+                    world.addParticle(ParticleTypes.LARGE_SMOKE,
+                            particlePos.x, particlePos.y, particlePos.z,
+                            0, 0, 0); // No motion for particles
 
+                }
+                entity.hurt(damageSources().magic(), damage);
             }
-            entity.hurt(damageSources().magic(), damage);
+
+
         }
 
     }
@@ -570,11 +426,16 @@ public class MageHand extends Ranged_Projectiles implements GeoEntity {
     }
 
     private PlayState predicate(AnimationState<MageHand> mageHandAnimationState) {
-        if (mageHandAnimationState.isMoving()) {
+
+        if (world.isClientSide && world != null) {
+            if (mageHandAnimationState.isMoving()) {
+                mageHandAnimationState.getController().setAnimation(RawAnimation.begin().then("Fistproj", Animation.LoopType.LOOP));
+                return PlayState.CONTINUE;
+            }
+
             mageHandAnimationState.getController().setAnimation(RawAnimation.begin().then("Fistproj", Animation.LoopType.LOOP));
             return PlayState.CONTINUE;
         }
-        mageHandAnimationState.getController().setAnimation(RawAnimation.begin().then("Fistproj", Animation.LoopType.LOOP));
         return PlayState.CONTINUE;
     }
 

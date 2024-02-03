@@ -1,6 +1,5 @@
 package net.Ryaas.firstmod.entity.custom;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
@@ -43,7 +42,7 @@ public class Beamattack extends Ranged_Projectiles implements  GeoEntity{
         double x;
         double y;
         double z;
-        Level level = Minecraft.getInstance().level;
+
         Vec3 position = this.position();
         x = position.x;
         y = position.y;
@@ -55,8 +54,8 @@ public class Beamattack extends Ranged_Projectiles implements  GeoEntity{
             double offsetY = random.nextGaussian() * 0.2;
             double offsetZ = random.nextGaussian() * 0.2;
 
-            if(level != null){
-                level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, x, y, z, offsetX, offsetY, offsetZ);
+            if(world != null && world.isClientSide){
+                world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, x, y, z, offsetX, offsetY, offsetZ);
 
             }
 
@@ -109,7 +108,7 @@ public class Beamattack extends Ranged_Projectiles implements  GeoEntity{
     public void tick() {
         super.tick();
 
-        if (!this.world.isClientSide) {
+        if (world != null && !this.world.isClientSide) {
 
         }
         active--;

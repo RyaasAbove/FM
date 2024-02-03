@@ -16,6 +16,7 @@ import java.util.*;
 public class Telekinesis {
     private Entity heldEntity;
     private MinecraftServer server;
+    double distanceInFront = 2.0;
     private ServerPlayer player;
     private TelekinesisHandler handler = ModGameLogicManager.getTelekinesisHandler();
 
@@ -48,12 +49,12 @@ public class Telekinesis {
 
     public void updateHeldEntities() {
         if(this.server != null)
-        heldEntities.forEach((playerUUID, entity) -> {
+            heldEntities.forEach((playerUUID, entity) -> {
             ServerPlayer player = server.getPlayerList().getPlayer(playerUUID);
             if (player != null && entity.isAlive()) {
                 Vec3 lookVec = player.getLookAngle();
                 Vec3 eyePosition = player.getEyePosition(1.0F);
-                double distanceInFront = 2.0; // Distance in front of the player
+                 // Distance in front of the player
                 Vec3 newPosition = eyePosition.add(lookVec.scale(distanceInFront));
                 entity.setPos(newPosition.x, newPosition.y, newPosition.z);
                 System.out.println("updating pos");

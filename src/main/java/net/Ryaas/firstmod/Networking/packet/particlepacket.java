@@ -2,13 +2,16 @@ package net.Ryaas.firstmod.Networking.packet;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkEvent;
+
 import java.util.function.Supplier;
 
 public class particlepacket {
     private final Vec3 start;
     private final Vec3 direction;
+    private static Level world;
     private final double distance;
 
     public particlepacket(Vec3 start, Vec3 direction, double distance) {
@@ -51,8 +54,11 @@ public class particlepacket {
 
     // Example spawnParticle method, adjust for actual client-side particle spawning
     private static void spawnParticle(Vec3 particlePos) {
+        if(world.isClientSide){
+            world.addParticle(ParticleTypes.SOUL_FIRE_FLAME,
+                    particlePos.x, particlePos.y, particlePos.z, 0, 0, 0);
+
+        }
         // Directly using Minecraft.getInstance() might not work in all contexts, adjust as necessary
-        net.minecraft.client.Minecraft.getInstance().level.addParticle(ParticleTypes.SOUL_FIRE_FLAME,
-                particlePos.x, particlePos.y, particlePos.z, 0, 0, 0);
-    }
+         }
 }

@@ -3,6 +3,7 @@ package net.Ryaas.firstmod;
 import net.Ryaas.firstmod.Networking.ModNetworking;
 import net.Ryaas.firstmod.Networking.packet.MainAbility;
 import net.Ryaas.firstmod.Networking.packet.MarkPacketc2s;
+import net.Ryaas.firstmod.Networking.packet.SecondaryAbility;
 import net.Ryaas.firstmod.assisting.KeyBinding;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
@@ -21,6 +22,11 @@ public class ClientForgeHandler {
         if(KeyBinding.INSTANCE.PRIMARY.consumeClick()){
 
             ModNetworking.sendToServer(new MainAbility());
+
+        }
+        if(KeyBinding.INSTANCE.SECONDARY.consumeClick()){
+
+            ModNetworking.sendToServer(new SecondaryAbility());
 
         }
     }
