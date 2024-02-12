@@ -48,7 +48,7 @@ public class FirstMod
 
         ModCreativeModeTabs.register(modEventBus);
 
-        ModItems.register(modEventBus);
+        ModItems.ITEMS.register(modEventBus);
 
         ModEntities.register(modEventBus);
 
@@ -100,6 +100,9 @@ public class FirstMod
             EntityRenderers.register(ModEntities.MAGE_HAND.get(), MageHandRenderer::new);
             EntityRenderers.register(ModEntities.BEAM_ATTACK.get(), BeamattackRenderer::new);
             EntityRenderers.register(ModEntities.MOON.get(), MoonRenderer::new);
+            EntityRenderers.register(ModEntities.BLACK_HOLE.get(), BlackHoleRenderer::new);
+            EntityRenderers.register(ModEntities.SPAWN_EFFECTS.get(), SpawneffectsRenderer::new);
+
 //            EntityRenderers.register(ModEntities.MAGE_HAND_PROJ, MageHandRenderer::new);
 
 

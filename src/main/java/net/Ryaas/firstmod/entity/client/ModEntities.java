@@ -1,10 +1,8 @@
 package net.Ryaas.firstmod.entity.client;
 
 import net.Ryaas.firstmod.FirstMod;
-import net.Ryaas.firstmod.entity.custom.Beamattack;
-import net.Ryaas.firstmod.entity.custom.Bungerentity;
-import net.Ryaas.firstmod.entity.custom.MageHand;
-import net.Ryaas.firstmod.entity.custom.Moon;
+import net.Ryaas.firstmod.entity.custom.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -44,6 +42,18 @@ public class ModEntities {
                     .setShouldReceiveVelocityUpdates(true)
                     .build("moon"));
 
+    public static final RegistryObject<EntityType<BlackHoleUlt>> BLACK_HOLE = ENTITY_TYPES.register("black_hole",
+            () -> EntityType.Builder.<BlackHoleUlt>of(BlackHoleUlt::new, MobCategory.MISC)
+                    .sized(5f, 5f) // Set the appropriate size
+                    .setTrackingRange(80)
+                    .setUpdateInterval(3)
+                    .setShouldReceiveVelocityUpdates(true)
+                    .build("black_hole"));
+
+    public static final RegistryObject<EntityType<Spawneffects>> SPAWN_EFFECTS = ENTITY_TYPES.register("spawneffects",
+            () -> EntityType.Builder.<Spawneffects>of(Spawneffects::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F) // Adjust size as needed
+                    .build(new ResourceLocation(FirstMod.MOD_ID, "spawneffects").toString()));
 
 //    public static final RegistryObject<EntityType<MageHand>> MAGE_HAND_CHARGE_1 = ENTITY_TYPES.register("mage_hand_charge_1",
 //            () -> EntityType.Builder.<MageHand>of(MageHand::new, MobCategory.MISC)

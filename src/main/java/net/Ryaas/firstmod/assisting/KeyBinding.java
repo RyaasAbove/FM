@@ -10,6 +10,7 @@ public class KeyBinding {
     public static final String KEY_USE_MARK = "key.firstmod.use_mark";
     public static final String KEY_PRIMARY = "key.firstmod.primary";
     public static final String KEY_SECONDARY = "key.firstmod.secondary";
+    public static final String KEY_ULTIMATE = "key.firstmod.ultimate";
 
 public static final KeyMapping MARK_KEY = new KeyMapping(KEY_USE_MARK, KeyConflictContext.IN_GAME,
         InputConstants.getKey(InputConstants.KEY_R,-1), KEY_CATEGORY);
@@ -18,6 +19,9 @@ public static final KeyMapping MARK_KEY = new KeyMapping(KEY_USE_MARK, KeyConfli
 
     public static final KeyMapping SECONDARY = new KeyMapping(KEY_SECONDARY, KeyConflictContext.IN_GAME,
             InputConstants.getKey(InputConstants.KEY_C,-1), KEY_CATEGORY);
+
+    public static final KeyMapping ULTIMATE = new KeyMapping(KEY_ULTIMATE, KeyConflictContext.IN_GAME,
+            InputConstants.getKey(InputConstants.KEY_X,-1), KEY_CATEGORY);
 }
 
 

@@ -1,10 +1,7 @@
 package net.Ryaas.firstmod.Networking;
 
 import net.Ryaas.firstmod.FirstMod;
-import net.Ryaas.firstmod.Networking.packet.MainAbility;
-import net.Ryaas.firstmod.Networking.packet.MarkPacketc2s;
-import net.Ryaas.firstmod.Networking.packet.SecondaryAbility;
-import net.Ryaas.firstmod.Networking.packet.particlepacket;
+import net.Ryaas.firstmod.Networking.packet.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
@@ -53,6 +50,57 @@ public class ModNetworking {
                 .encoder(particlepacket::encode)
                 .consumerMainThread(particlepacket::handle)
                 .add();
+
+        net.messageBuilder(SpeedOne.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SpeedOne::decode)
+                .encoder(SpeedOne::encode)
+                .consumerMainThread(SpeedOne::handle)
+                .add();
+
+        net.messageBuilder(Spawneffectspacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(Spawneffectspacket::decode)
+                .encoder(Spawneffectspacket::encode)
+                .consumerMainThread(Spawneffectspacket::handle)
+                .add();
+
+        net.messageBuilder(BlackHolePacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(BlackHolePacket::decode)
+                .encoder(BlackHolePacket::encode)
+                .consumerMainThread(BlackHolePacket::handle)
+                .add();
+
+
+        net.messageBuilder(Ring1Packet.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(Ring1Packet::decode)
+                .encoder(Ring1Packet::encode)
+                .consumerMainThread(Ring1Packet::handle)
+                .add();
+
+        net.messageBuilder(Ring2Packet.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(Ring2Packet::decode)
+                .encoder(Ring2Packet::encode)
+                .consumerMainThread(Ring2Packet::handle)
+                .add();
+
+        net.messageBuilder(Ring3Packet.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(Ring3Packet::decode)
+                .encoder(Ring3Packet::encode)
+                .consumerMainThread(Ring3Packet::handle)
+                .add();
+
+
+        net.messageBuilder(UltimateAbility.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(UltimateAbility::decode)
+                .encoder(UltimateAbility::encode)
+                .consumerMainThread(UltimateAbility::handle)
+                .add();
+
+        net.messageBuilder(BlackHoleTargetUpdatePacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(BlackHoleTargetUpdatePacket::decode)
+                .encoder(BlackHoleTargetUpdatePacket::encode)
+                .consumerMainThread(BlackHoleTargetUpdatePacket::handle)
+                .add();
+
 
 
 

@@ -16,11 +16,13 @@ public class ClientEvents {
         public static class ClientModBusEvents {
             @SubscribeEvent
             public static void onKeyRegister(RegisterKeyMappingsEvent event) {
-                event.register(KeyBinding.MARK_KEY);
-                event.register(KeyBinding.PRIMARY);
+
                 event.register(KeyBinding.SECONDARY);
+                event.register(KeyBinding.ULTIMATE);
 
             }
+
+
 
         }
     }

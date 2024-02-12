@@ -33,6 +33,7 @@ public class MainAbility {
         ctx.enqueueWork(() -> {
             ServerPlayer player = ctx.getSender();
             if(player != null){
+
                 // Your logic here
                 Telekinesis telekinesis = FirstMod.getGameLogicManager().getTelekinesisHandler().getOrCreateTelekinesis(player);
                 telekinesis.activateAbility(player);

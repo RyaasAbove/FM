@@ -1,10 +1,13 @@
 package net.Ryaas.firstmod.event;
 
 import net.Ryaas.firstmod.FirstMod;
+import net.Ryaas.firstmod.util.ChargeManager;
 import net.Ryaas.firstmod.util.ModGameLogicManager;
 import net.Ryaas.firstmod.util.TelekinesisHandler;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -33,7 +36,21 @@ public class ModEventsForge {
             TelekinesisHandler handler = ModGameLogicManager.getTelekinesisHandler();
             if (handler != null) {
                 handler.updateAllTelekinesis();
+                ChargeManager.RestoreCharges();
             }
         }
+
+
     }
+    @SubscribeEvent
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        ServerPlayer player = (ServerPlayer) event.getEntity();
+        if (player != null) {
+            ChargeManager.initializePlayerCharge(player);
+        }
+    }
+
+
+
+
 }
