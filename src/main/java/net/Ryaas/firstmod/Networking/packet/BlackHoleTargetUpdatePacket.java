@@ -38,6 +38,7 @@ public class BlackHoleTargetUpdatePacket {
                 Entity entity = ((ServerLevel) player.level()).getEntity(blackHoleUUID);
                 if (entity instanceof BlackHoleUlt) {
                     BlackHoleUlt blackHole = (BlackHoleUlt) entity;
+                    System.out.println(msg.targetPos);
                     blackHole.moveToTarget(msg.targetPos);
                 }
             }

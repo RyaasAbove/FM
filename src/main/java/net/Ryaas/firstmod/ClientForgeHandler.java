@@ -7,7 +7,6 @@ import net.Ryaas.firstmod.util.getTarget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
@@ -62,7 +61,7 @@ public class ClientForgeHandler {
         if (mc.player == null) return;
 
 // Check if the player is looking at a block
-        if (mc.hitResult != null && mc.hitResult.getType() == HitResult.Type.BLOCK) {
+
             BlockHitResult blockHitResult = (BlockHitResult) mc.hitResult;
             BlockPos blockPos = getTarget.getTargetedBlock(mc.player, 100);
 
@@ -76,5 +75,5 @@ public class ClientForgeHandler {
 
         }
 
-    }
+
 

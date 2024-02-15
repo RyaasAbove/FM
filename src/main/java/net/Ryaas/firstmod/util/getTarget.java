@@ -17,17 +17,20 @@ public class getTarget {
     // Instead, return the BlockPos and handle the sending elsewhere, making the utility method more versatile.
     public static BlockPos getTargetedBlock(Player player, double maxDistance) {
 
-        Vec3 startVec = player.getEyePosition(1.0F);
-        Vec3 lookVec = player.getViewVector(1.0F);
-        Vec3 endVec = startVec.add(lookVec.x * maxDistance, lookVec.y * maxDistance, lookVec.z * maxDistance);
+        if(player != null){
+            Vec3 startVec = player.getEyePosition(1.0F);
+            Vec3 lookVec = player.getViewVector(1.0F);
+            Vec3 endVec = startVec.add(lookVec.x * maxDistance, lookVec.y * maxDistance, lookVec.z * maxDistance);
 
-        // Perform ray tracing with extended distance
-        HitResult hitResult = player.level().clip(new ClipContext(startVec, endVec, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
+            // Perform ray tracing with extended distance
+            HitResult hitResult = player.level().clip(new ClipContext(startVec, endVec, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
 
-        if (hitResult.getType() == HitResult.Type.BLOCK) {
-            BlockHitResult blockHitResult = (BlockHitResult) hitResult;
-            return blockHitResult.getBlockPos();
+            if (hitResult.getType() == HitResult.Type.BLOCK) {
+                BlockHitResult blockHitResult = (BlockHitResult) hitResult;
+                return blockHitResult.getBlockPos();
+            }
         }
+
 
         return null;
     }

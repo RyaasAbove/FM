@@ -7,14 +7,21 @@ import net.Ryaas.firstmod.Networking.packet.Ring2Packet;
 import net.Ryaas.firstmod.Networking.packet.Ring3Packet;
 import net.Ryaas.firstmod.util.getTarget;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.Optional;
+import java.util.UUID;
 
 
 public class BlackHoleUlt extends Ranged_Projectiles {
@@ -27,6 +34,9 @@ public class BlackHoleUlt extends Ranged_Projectiles {
     private int chargeup = 20;
 
     private Vec3 targetDirection = Vec3.ZERO;
+    private UUID ownerUuid;
+    private Player owner;
+    private ServerLevel serverLevel;
 
 
     public BlackHoleUlt(EntityType<? extends Projectile> entityType, Level world) {
@@ -37,6 +47,36 @@ public class BlackHoleUlt extends Ranged_Projectiles {
     @Override
     public void trail() {
 
+    }
+
+
+    @Override
+    protected void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        if (ownerUuid != null) {
+            compound.putUUID("OwnerUUID", ownerUuid);
+        }
+    }
+
+    @Override
+    protected void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        if (compound.hasUUID("OwnerUUID")) {
+            ownerUuid = compound.getUUID("OwnerUUID");
+        }
+    }
+
+    public void setOwner(Player player) {
+        this.ownerUuid = player.getUUID();
+        this.owner = player;
+    }
+
+    // Method to get the owner as a Player object
+    public Player getOwner() {
+        if (this.level() instanceof ServerLevel) {
+            return ((ServerLevel) this.level()).getServer().getPlayerList().getPlayer(this.ownerUuid);
+        }
+        return null; // Return null if the owner cannot be found or if this is called on the client side
     }
 
     @Override
@@ -69,6 +109,20 @@ public class BlackHoleUlt extends Ranged_Projectiles {
     @Override
     public float getSpeed() {
         return 0;
+    }
+    public BlockPos findDistantBlock(Player player, Level world, int maxDistance) {
+        Vec3 startVec = player.getEyePosition(1.0F);
+        Vec3 lookVec = player.getViewVector(1.0F);
+        Vec3 endVec = startVec.add(lookVec.x * maxDistance, lookVec.y * maxDistance, lookVec.z * maxDistance);
+
+        ClipContext context = new ClipContext(startVec, endVec, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player);
+        BlockHitResult hitResult = world.clip(context);
+
+        if (hitResult.getType() == HitResult.Type.BLOCK) {
+            return hitResult.getBlockPos();
+        }
+
+        return null; // No block was hit within the distance
     }
 
     @Override
@@ -139,7 +193,12 @@ public class BlackHoleUlt extends Ranged_Projectiles {
                 Vec3 motion = this.getDeltaMovement();
 
                 this.setPos(this.getX() + motion.x, this.getY() + motion.y, this.getZ() + motion.z);
+
                 getTarget.toggleActive();
+
+                BlockPos pos = getTarget.getTargetedBlock(owner, 100);
+
+
 
             }
             }
