@@ -19,6 +19,7 @@ public class ClientEvents {
 
                 event.register(KeyBinding.SECONDARY);
                 event.register(KeyBinding.ULTIMATE);
+                event.register(KeyBinding.TOGGLE_ULT_STATUS);
 
             }
 

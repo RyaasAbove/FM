@@ -101,6 +101,13 @@ public class ModNetworking {
                 .consumerMainThread(BlackHoleTargetUpdatePacket::handle)
                 .add();
 
+        net.messageBuilder(Indicator.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(Indicator::decode)
+                .encoder(Indicator::encode)
+                .consumerMainThread(Indicator::handle)
+                .add();
+
+
 
 
 

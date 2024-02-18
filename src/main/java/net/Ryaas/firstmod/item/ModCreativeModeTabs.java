@@ -27,6 +27,8 @@ public class ModCreativeModeTabs {
                         pOutput.accept(ModItems.FRIES.get());
                         pOutput.accept(ModItems.BURGER.get());
                         pOutput.accept(ModItems.SALT.get());
+                        pOutput.accept(ModItems.TELEKINETIC_ASCENDER.get());
+                        pOutput.accept(ModItems.ABILITY_REMOVER.get());
 
                     })
                     .build());

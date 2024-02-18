@@ -2,9 +2,12 @@ package net.Ryaas.firstmod.Networking.packet;
 
 import net.Ryaas.firstmod.entity.client.ModEntities;
 import net.Ryaas.firstmod.entity.custom.Spawneffects;
+import net.Ryaas.firstmod.util.CooldownManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -40,13 +43,25 @@ public class UltimateAbility {
         if (player == null) return; // Check for null player first
 
         ctx.get().enqueueWork(() -> {
-            ServerLevel serverWorld = player.serverLevel(); // Correct way to get the server world
+            if (CooldownManager.hasCooldown(player)) {
+                if(player.level().isClientSide){
+                    player.level().playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.FIRE_EXTINGUISH, SoundSource.PLAYERS, 1.0F, 1.0F);
 
-            Spawneffects spawneffects = ModEntities.SPAWN_EFFECTS.get().create(serverWorld);
-            if (spawneffects != null) {
-                spawneffects.setPos(message.pos.x, message.pos.y, message.pos.z);
-                spawneffects.setup(message.lookVec, player.getUUID()); // Correct order of parameters
-                serverWorld.addFreshEntity(spawneffects);
+                }
+
+            } else {
+                // Activate the Black Hole
+
+                ServerLevel serverWorld = player.serverLevel(); // Correct way to get the server world
+
+                Spawneffects spawneffects = ModEntities.SPAWN_EFFECTS.get().create(serverWorld);
+                if (spawneffects != null) {
+                    spawneffects.setPos(message.pos.x, message.pos.y, message.pos.z);
+                    spawneffects.setup(message.lookVec, player.getUUID()); // Correct order of parameters
+                    serverWorld.addFreshEntity(spawneffects);
+                    CooldownManager.setCooldown(player, 20 * 60); // 1 minute cooldown
+
+                }
             }
         });
         ctx.get().setPacketHandled(true);

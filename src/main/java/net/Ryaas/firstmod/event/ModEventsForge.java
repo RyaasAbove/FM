@@ -1,16 +1,25 @@
 package net.Ryaas.firstmod.event;
 
 import net.Ryaas.firstmod.FirstMod;
+import net.Ryaas.firstmod.Networking.ModNetworking;
+import net.Ryaas.firstmod.Networking.packet.Indicator;
 import net.Ryaas.firstmod.util.ChargeManager;
+import net.Ryaas.firstmod.util.CooldownManager;
 import net.Ryaas.firstmod.util.ModGameLogicManager;
 import net.Ryaas.firstmod.util.TelekinesisHandler;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 @Mod.EventBusSubscriber(modid = FirstMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModEventsForge {
@@ -34,14 +43,32 @@ public class ModEventsForge {
     public static void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
             TelekinesisHandler handler = ModGameLogicManager.getTelekinesisHandler();
+
             if (handler != null) {
                 handler.updateAllTelekinesis();
-                ChargeManager.RestoreCharges();
+
             }
+
+            MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+            for (ServerLevel level : server.getAllLevels()) {
+                for (Player player : level.players()) {
+                    if (passiveManager.hasAbilitySetOne(player) && server.getTickCount() % 20 == 0) {
+                        passiveManager.addXpSlowly(player);
+                    }
+                }
+            }
+
+
+
+
+
+
+
         }
 
 
     }
+
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         ServerPlayer player = (ServerPlayer) event.getEntity();
@@ -50,7 +77,22 @@ public class ModEventsForge {
         }
     }
 
+    private static void spawnCooldownIndicatorParticles(ServerPlayer player) {
+        boolean isCooldownActive = !CooldownManager.hasCooldown(player);
+        ParticleOptions particle = isCooldownActive ? ParticleTypes.SMOKE : ParticleTypes.SOUL_FIRE_FLAME;
+
+        // Spawn particles around the player
+        if (isCooldownActive) {
+            // Cooldown is ready, spawn soul fire particles
+            Indicator packet = new Indicator(player.getX(), player.getY() + 1.0, player.getZ(), 0);
+            ModNetworking.getChannel().send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), packet);
+        } else {
+
+            Indicator packet = new Indicator(player.getX()+0.25, player.getY() + 1.5, player.getZ(), 1);
+            ModNetworking.getChannel().send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), packet);
+
+        }
 
 
-
+    }
 }

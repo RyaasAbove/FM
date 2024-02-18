@@ -6,7 +6,6 @@ import net.Ryaas.firstmod.assisting.KeyBinding;
 import net.Ryaas.firstmod.util.getTarget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
@@ -21,24 +20,30 @@ public class ClientForgeHandler {
     private static UUID blackHoleId; // The ID of the black hole, set when spawning it.
     static boolean blackHoleIsActive = false;
     @SubscribeEvent
-    public static void clientTick(TickEvent.ClientTickEvent event){
+    public static void clientTick(TickEvent.ClientTickEvent event) {
 
 
-        if(KeyBinding.INSTANCE.MARK_KEY.consumeClick()){
+        if (KeyBinding.INSTANCE.MARK_KEY.consumeClick()) {
 
             ModNetworking.sendToServer(new MarkPacketc2s());
 
         }
-        if(KeyBinding.INSTANCE.PRIMARY.consumeClick()){
+        if (KeyBinding.INSTANCE.PRIMARY.consumeClick()) {
 
             ModNetworking.sendToServer(new MainAbility());
 
         }
-        if(KeyBinding.INSTANCE.SECONDARY.isDown()){
+        if (KeyBinding.INSTANCE.SECONDARY.isDown()) {
 
             ModNetworking.sendToServer(new SecondaryAbility());
 
         }
+
+        if (KeyBinding.INSTANCE.PRIMARY.consumeClick()) {
+
+            ModNetworking.sendToServer(new ToggleIndicator());
+        }
+
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || event.phase != TickEvent.Phase.START) return;
 
@@ -62,18 +67,23 @@ public class ClientForgeHandler {
 
 // Check if the player is looking at a block
 
-            BlockHitResult blockHitResult = (BlockHitResult) mc.hitResult;
-            BlockPos blockPos = getTarget.getTargetedBlock(mc.player, 100);
+//            BlockHitResult blockHitResult = (BlockHitResult) mc.hitResult;
+        BlockPos blockPos = getTarget.getTargetedBlock(mc.player, 100);
 
-            // Now, you have the block position the player is looking at.
-            // Send this position to the server to update the black hole's target.
-            if(blockPos != null){
-                ModNetworking.sendToServer(new BlackHoleTargetUpdatePacket(blockPos));
-
-            }
-        }
+        // Now, you have the block position the player is looking at.
+        // Send this position to the server to update the black hole's target.
+        if (blockPos != null) {
+            ModNetworking.sendToServer(new BlackHoleTargetUpdatePacket(blockPos));
 
         }
+
+
+
+        // Assuming you have a method to get the current player's particle spawning preference
+
+    }
+
+}
 
 
 

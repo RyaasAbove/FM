@@ -1,7 +1,9 @@
 package net.Ryaas.firstmod;
 
 import net.Ryaas.firstmod.assisting.KeyBinding;
+import net.Ryaas.firstmod.client.UltimateHud;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -14,6 +16,11 @@ public class ClientModHandler {
         event.enqueueWork(() ->{
 
         });
+    }
+
+    @SubscribeEvent
+    public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
+        event.registerAboveAll("ultimate_ability", UltimateHud.GUI_ULT);
     }
 
     @SubscribeEvent

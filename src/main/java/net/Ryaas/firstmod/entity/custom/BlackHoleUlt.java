@@ -10,16 +10,20 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,6 +41,14 @@ public class BlackHoleUlt extends Ranged_Projectiles {
     private UUID ownerUuid;
     private Player owner;
     private ServerLevel serverLevel;
+
+
+
+    private double suctionRadius = 5.0;
+
+    private double damageAmount = 2.0; // Example damage amount
+    private int damageInterval = 10; // Damage every 20 ticks (1 second at 20 ticks/second)
+    private int tickCounter = 0; // Counter to keep track of ticks for damage interval
 
 
     public BlackHoleUlt(EntityType<? extends Projectile> entityType, Level world) {
@@ -72,9 +84,9 @@ public class BlackHoleUlt extends Ranged_Projectiles {
     }
 
     // Method to get the owner as a Player object
-    public Player getOwner() {
+    public UUID getCreator() {
         if (this.level() instanceof ServerLevel) {
-            return ((ServerLevel) this.level()).getServer().getPlayerList().getPlayer(this.ownerUuid);
+            return ownerUuid;
         }
         return null; // Return null if the owner cannot be found or if this is called on the client side
     }
@@ -155,6 +167,8 @@ public class BlackHoleUlt extends Ranged_Projectiles {
                 Vec3 newMotion = targetDirection.normalize().scale(0.1); // Scale represents speed
                 this.setDeltaMovement(newMotion);
             }
+            Vec3 blackHolePos = new Vec3(this.getX(), this.getY(), this.getZ());
+
             // Define the particle spawning parameters
             double x = this.getX();
             double y = this.getY();
@@ -182,6 +196,54 @@ public class BlackHoleUlt extends Ranged_Projectiles {
             ModNetworking.getChannel().send(PacketDistributor.NEAR.with(() ->
                             new PacketDistributor.TargetPoint(x, y, z, 50, this.world.dimension())),
                     ring3Packet);
+
+
+
+            //Suction
+            List<Entity> affectedEntities = world.getEntities(
+                    this,
+                    this.getBoundingBox().inflate(suctionRadius),
+                    entity -> entity.isAlive() && !(entity instanceof BlackHoleUlt) // Example condition, adjust as needed
+            );
+
+
+            for (Entity entity : affectedEntities) {
+                if(!entity.getUUID().equals(this.ownerUuid)){
+                    continue;
+                }
+                    Vec3 directionToBlackHole = blackHolePos.subtract(entity.position()).normalize();
+                    double distance = blackHolePos.distanceTo(entity.position());
+
+                    // Calculate the strength of the pull based on distance (optional)
+                    double pullStrength = 5.0 - (distance / suctionRadius);
+
+                    // Apply motion towards the black hole; adjust the factor to control the speed
+                    entity.setDeltaMovement(entity.getDeltaMovement().add(directionToBlackHole.scale(pullStrength * 0.1)));
+
+
+            }
+            tickCounter++;
+
+            // Check if it's time to apply damage
+            if (tickCounter >= damageInterval) {
+                for (Entity entity : affectedEntities) {
+                    if(entity instanceof LivingEntity )
+                        if (!entity.getUUID().equals(this.ownerUuid)) {
+                            continue;
+                        }
+                        (entity).hurt(damageSources().magic(), (float)damageAmount); // Apply damage
+
+
+                }
+                tickCounter = 0; // Reset counter after applying damage
+            }
+
+            if (tickCounter % 20 == 0) {
+                destroyBlocksAround();
+            }
+
+
+
 
 
 
@@ -217,6 +279,28 @@ public class BlackHoleUlt extends Ranged_Projectiles {
                 getTarget.toggleActive();
             }
         }
+
+
+
+private void destroyBlocksAround() {
+    int radius = 3;
+    BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+
+    for (int x = -radius; x <= radius; x++) {
+        for (int y = -radius; y <= radius; y++) {
+            for (int z = -radius; z <= radius; z++) {
+                mutable.set(this.getX() + x, this.getY() + y, this.getZ() + z);
+                BlockState blockState = world.getBlockState(mutable);
+                // Check if the block is not air and possibly other conditions
+                if (!blockState.isAir()) {
+                    // Destroy the block without dropping items
+                    world.destroyBlock(mutable, false);
+                }
+            }
+        }
+    }
+}
+
     public void updateDirection(Vec3 lookVec) {
         // Normalize the look vector to ensure it has unit length, then scale to desired speed.
         Vec3 normalizedLookVec = lookVec.normalize();

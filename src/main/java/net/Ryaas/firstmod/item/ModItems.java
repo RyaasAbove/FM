@@ -43,6 +43,13 @@ public class ModItems {
     public static final RegistryObject<Item> BUNGER_SPAWN_EGG = ITEMS.register("bunger_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.BUNGER, 0xD57E36, 0x1D0D00, new Item.Properties()));
 
+    public static final RegistryObject<Item> TELEKINETIC_ASCENDER = ITEMS.register("telekinetic_ascender",
+            () -> new TelekineticAscenderItem(new Item.Properties()));
+
+    public static final RegistryObject<Item> ABILITY_REMOVER = ITEMS.register("ability_remover",
+            () -> new AbilityRemoverItem(new Item.Properties()));
+
+
 
     public static final RegistryObject<ArmorItem> WIZARD_HAT = ITEMS.register("wizard_hat",
             () -> new WizardHatItem(ModArmorMaterials.WIZARD_HAT, ArmorItem.Type.HELMET, new Item.Properties()));

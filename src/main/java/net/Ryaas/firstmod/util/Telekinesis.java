@@ -41,7 +41,6 @@ public class Telekinesis {
     private final Set<UUID> playersWithActiveAbility = new HashSet<>();
     private final Map<UUID, List<Entity>> heldEntities = new HashMap<>();
     private final Map<UUID, Vec3> lastPositions = new HashMap<>();
-    private Map<UUID, Integer> drainCooldowns = new HashMap<>();
 
 
 
