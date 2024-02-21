@@ -107,6 +107,12 @@ public class ModNetworking {
                 .consumerMainThread(Indicator::handle)
                 .add();
 
+        net.messageBuilder(SprayPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SprayPacket::decode)
+                .encoder(SprayPacket::encode)
+                .consumerMainThread(SprayPacket::handle)
+                .add();
+
 
 
 

@@ -3,6 +3,7 @@ package net.Ryaas.firstmod.Networking.packet;
 import net.Ryaas.firstmod.util.ModGameLogicManager;
 import net.Ryaas.firstmod.util.Telekinesis;
 import net.Ryaas.firstmod.util.TelekinesisHandler;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
@@ -33,15 +34,20 @@ public class SecondaryAbility {
         NetworkEvent.Context ctx = ctxSupplier.get();
         ctx.enqueueWork(() -> {
             ServerPlayer player = ctx.getSender();
-            if(player != null){
-                TelekinesisHandler handler = ModGameLogicManager.getTelekinesisHandler();
+            if(player != null) {
+                CompoundTag playerData = player.getPersistentData();
+                // Check if the player has the "AbilitySet" key and it's set to 1
+                if (playerData.contains("AbilitySet") && playerData.getInt("AbilitySet") == 1) {
 
-                // Correctly retrieve the Telekinesis instance for the player
-                Telekinesis telekinesis = handler.getOrCreateTelekinesis(player);
-                if (telekinesis != null) {
-                    // Adjust the entity distance based on whether the player is shifting
-                    boolean increaseDistance = player.isShiftKeyDown();
-                    telekinesis.adjustEntityDistance(player, increaseDistance);
+                    TelekinesisHandler handler = ModGameLogicManager.getTelekinesisHandler();
+
+                    // Correctly retrieve the Telekinesis instance for the player
+                    Telekinesis telekinesis = handler.getOrCreateTelekinesis(player);
+                    if (telekinesis != null) {
+                        // Adjust the entity distance based on whether the player is shifting
+                        boolean increaseDistance = player.isShiftKeyDown();
+                        telekinesis.adjustEntityDistance(player, increaseDistance);
+                    }
                 }
             }
 

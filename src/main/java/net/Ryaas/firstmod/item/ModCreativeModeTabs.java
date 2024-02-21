@@ -29,6 +29,7 @@ public class ModCreativeModeTabs {
                         pOutput.accept(ModItems.SALT.get());
                         pOutput.accept(ModItems.TELEKINETIC_ASCENDER.get());
                         pOutput.accept(ModItems.ABILITY_REMOVER.get());
+                        pOutput.accept(ModItems.HEALING_CHANNELER.get());
 
                     })
                     .build());

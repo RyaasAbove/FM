@@ -3,12 +3,10 @@ package net.Ryaas.firstmod.event;
 import net.Ryaas.firstmod.FirstMod;
 import net.Ryaas.firstmod.Networking.ModNetworking;
 import net.Ryaas.firstmod.Networking.packet.Indicator;
-import net.Ryaas.firstmod.util.ChargeManager;
-import net.Ryaas.firstmod.util.CooldownManager;
-import net.Ryaas.firstmod.util.ModGameLogicManager;
-import net.Ryaas.firstmod.util.TelekinesisHandler;
+import net.Ryaas.firstmod.util.*;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,6 +18,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.server.ServerLifecycleHooks;
+
+import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = FirstMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModEventsForge {
@@ -52,8 +52,15 @@ public class ModEventsForge {
             MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
             for (ServerLevel level : server.getAllLevels()) {
                 for (Player player : level.players()) {
+                    CompoundTag playerData = player.getPersistentData();
+
                     if (passiveManager.hasAbilitySetOne(player) && server.getTickCount() % 20 == 0) {
                         passiveManager.addXpSlowly(player);
+                    }
+                    // Only recharge energy for players with "AbilitySet" set to 2
+                    if (playerData.contains("AbilitySet") && playerData.getInt("AbilitySet") == 2) {
+                        UUID playerId = player.getUUID();
+                        PlayerHealingManager.rechargeEnergy(playerId, PlayerHealingManager.RECHARGE_RATE / 20.0f);
                     }
                 }
             }
@@ -74,6 +81,15 @@ public class ModEventsForge {
         ServerPlayer player = (ServerPlayer) event.getEntity();
         if (player != null) {
             ChargeManager.initializePlayerCharge(player);
+        }
+
+
+        CompoundTag playerData = player.getPersistentData();
+
+        // Check if the "AbilitySet" is set to 2
+        if (playerData.contains("AbilitySet") && playerData.getInt("AbilitySet") == 2) {
+            UUID playerId = player.getUUID();
+            PlayerHealingManager.initializePlayerEnergy(playerId);
         }
     }
 

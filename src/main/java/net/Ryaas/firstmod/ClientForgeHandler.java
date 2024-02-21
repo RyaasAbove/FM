@@ -18,9 +18,13 @@ import java.util.UUID;
 public class ClientForgeHandler {
 
     private static UUID blackHoleId; // The ID of the black hole, set when spawning it.
+
+
     static boolean blackHoleIsActive = false;
+
     @SubscribeEvent
     public static void clientTick(TickEvent.ClientTickEvent event) {
+        Minecraft mc = Minecraft.getInstance();
 
 
         if (KeyBinding.INSTANCE.MARK_KEY.consumeClick()) {
@@ -32,6 +36,9 @@ public class ClientForgeHandler {
 
             ModNetworking.sendToServer(new MainAbility());
 
+
+
+
         }
         if (KeyBinding.INSTANCE.SECONDARY.isDown()) {
 
@@ -39,12 +46,11 @@ public class ClientForgeHandler {
 
         }
 
-        if (KeyBinding.INSTANCE.PRIMARY.consumeClick()) {
+        if (KeyBinding.INSTANCE.TOGGLE_ULT_STATUS.consumeClick()) {
 
             ModNetworking.sendToServer(new ToggleIndicator());
         }
 
-        Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || event.phase != TickEvent.Phase.START) return;
 
         if (KeyBinding.INSTANCE.ULTIMATE.consumeClick()) {

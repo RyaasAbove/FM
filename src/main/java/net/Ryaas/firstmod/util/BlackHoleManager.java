@@ -26,16 +26,10 @@ public class BlackHoleManager {
         return instance;
     }
 
-    public static void setPlayer(Player player) {
-        playerUuid = player.getUUID();
-    }
 
     // Adjust parameter types to accept and store UUIDs
     public void addBlackHole(UUID playerUUID, UUID blackHoleUUID) {
         playerToBlackHoleMap.put(playerUUID, blackHoleUUID);
-    }
-    public static UUID getPlayerUuid() {
-        return playerUuid;
     }
 
     // If you need to get the PlayerEntity from the UUID (server-side only)

@@ -46,6 +46,9 @@ public class ModItems {
     public static final RegistryObject<Item> TELEKINETIC_ASCENDER = ITEMS.register("telekinetic_ascender",
             () -> new TelekineticAscenderItem(new Item.Properties()));
 
+    public static final RegistryObject<Item> HEALING_CHANNELER = ITEMS.register("healing_channeler",
+            () -> new HealingChanneler(new Item.Properties()));
+
     public static final RegistryObject<Item> ABILITY_REMOVER = ITEMS.register("ability_remover",
             () -> new AbilityRemoverItem(new Item.Properties()));
 

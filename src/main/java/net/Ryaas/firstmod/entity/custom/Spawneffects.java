@@ -6,6 +6,7 @@ import net.Ryaas.firstmod.entity.client.ModEntities;
 import net.Ryaas.firstmod.util.BlackHoleManager;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -23,6 +24,7 @@ public class Spawneffects extends Ranged_Projectiles {
     private final int duration = 20 * 5; // Duration of the effect in ticks (e.g., 5 seconds)
     private final Random random = new Random();
     private UUID playerUUID;
+    private Player player;
 
     private int active = 100;
     private Vec3 playerLookVec;
@@ -42,10 +44,12 @@ public class Spawneffects extends Ranged_Projectiles {
 
 
 
-    public void setup(Vec3 lookVec, UUID playerUUID) {
+    public void setup(Vec3 lookVec, UUID playerUUID, Player player) {
         if(lookVec != null){
             this.playerLookVec = lookVec.normalize();
         }
+
+        this.player = player;
 
         this.playerUUID = playerUUID;
     }
@@ -80,7 +84,7 @@ public class Spawneffects extends Ranged_Projectiles {
     public void tick() {
         super.tick();
         if(setup1 == 1){
-            setup(playerLookVec, playerUUID);
+            setup(playerLookVec, playerUUID, player);
             setup1--;
         }
 
@@ -116,19 +120,27 @@ public class Spawneffects extends Ranged_Projectiles {
 
     public void spawnBlackHole() {
         if (!world.isClientSide) {
+            // Create a new black hole entity
             BlackHoleUlt blackHoleEntity = ModEntities.BLACK_HOLE.get().create(world);
-            assert blackHoleEntity != null;
-            UUID blackHoleUUID = blackHoleEntity.getUUID(); // Assuming getUUID() retrieves the entity's UUID
             if (blackHoleEntity != null) {
-                blackHoleEntity.setPos(this.getX(), this.getY(), this.getZ()); // Set spawn position
+                // Set the black hole's position and initial motion
+                blackHoleEntity.setPos(this.getX(), this.getY(), this.getZ());
                 if (this.playerLookVec != null) {
-                    Vec3 motion = this.playerLookVec.normalize().scale(0.1); // Adjust the scale factor as needed
+                    Vec3 motion = this.playerLookVec.normalize().scale(0.1); // Adjust motion based on the look vector
                     blackHoleEntity.setDeltaMovement(motion);
-                    world.addFreshEntity(blackHoleEntity);
-
-                    // Use the playerUUID to add the black hole to the manager
-                    BlackHoleManager.getInstance().addBlackHole(this.playerUUID, blackHoleUUID);
                 }
+                blackHoleEntity.setOwner(player); // Assuming 'player' is the entity spawning the black hole
+
+                // Add the black hole entity to the world
+                world.addFreshEntity(blackHoleEntity);
+
+
+                // Associate the black hole with the player in BlackHoleManager
+                UUID blackHoleUUID = blackHoleEntity.getUUID(); // Get the black hole's UUID
+                BlackHoleManager.getInstance().addBlackHole(this.playerUUID, blackHoleUUID);
+            } else {
+                // Log an error or take appropriate action if the black hole entity couldn't be created
+                System.err.println("Failed to create a BlackHoleUlt entity.");
             }
         }
     }

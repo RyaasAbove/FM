@@ -208,7 +208,7 @@ public class BlackHoleUlt extends Ranged_Projectiles {
 
 
             for (Entity entity : affectedEntities) {
-                if(!entity.getUUID().equals(this.ownerUuid)){
+                if(entity.getUUID().equals(this.ownerUuid)){
                     continue;
                 }
                     Vec3 directionToBlackHole = blackHolePos.subtract(entity.position()).normalize();
@@ -228,7 +228,7 @@ public class BlackHoleUlt extends Ranged_Projectiles {
             if (tickCounter >= damageInterval) {
                 for (Entity entity : affectedEntities) {
                     if(entity instanceof LivingEntity )
-                        if (!entity.getUUID().equals(this.ownerUuid)) {
+                        if (entity.getUUID().equals(this.ownerUuid)) {
                             continue;
                         }
                         (entity).hurt(damageSources().magic(), (float)damageAmount); // Apply damage
