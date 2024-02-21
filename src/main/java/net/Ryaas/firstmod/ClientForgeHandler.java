@@ -37,9 +37,7 @@ public class ClientForgeHandler {
             ModNetworking.sendToServer(new MainAbility());
 
 
-
-
-        }
+            }
         if (KeyBinding.INSTANCE.SECONDARY.isDown()) {
 
             ModNetworking.sendToServer(new SecondaryAbility());
