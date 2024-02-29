@@ -4,17 +4,22 @@ import net.Ryaas.firstmod.Networking.ModNetworking;
 import net.Ryaas.firstmod.Networking.packet.SprayPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class HealingAbilityHandler {
     private static final float HEALING_COST = 10.0f;
-    private static final float HEAL_AMOUNT = 1.0F;
+    private static final float HEAL_AMOUNT = 5.0F;
+    private static final Map<Player, Boolean> healingActive = new HashMap<>();
+
 
     public static void activateHealing(ServerPlayer player) {
         if (PlayerHealingManager.getPlayerEnergy(player.getUUID()) >= HEALING_COST) {
@@ -26,6 +31,11 @@ public class HealingAbilityHandler {
                 healedEntity.heal(HEAL_AMOUNT);
             });
         }
+    }
+    public static boolean toggleHealing(Player player) {
+        boolean isActive = healingActive.getOrDefault(player, false);
+        healingActive.put(player, !isActive);
+        return !isActive;
     }
 
     public static void sendHealingBeam(Level level, Vec3 start, Vec3 end, ServerPlayer player) {

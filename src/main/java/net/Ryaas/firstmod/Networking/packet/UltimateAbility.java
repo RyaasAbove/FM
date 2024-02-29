@@ -70,6 +70,23 @@ public class UltimateAbility {
                     }
                 }
             }
+            else if(playerData.contains("AbilitySet") && playerData.getInt("AbilitySet") == 2){
+
+
+                if (CooldownManager.hasCooldown(player)) {
+                    if (player.level().isClientSide) {
+                        player.level().playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.FIRE_EXTINGUISH, SoundSource.PLAYERS, 1.0F, 1.0F);
+
+                    }
+
+                } else {
+                    HealingDome.activateDome(player, 20);
+                    CooldownManager.setCooldown(player, 20 * 1); //
+
+
+                }
+
+            }
         });
         ctx.get().setPacketHandled(true);
     }

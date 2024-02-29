@@ -1,5 +1,6 @@
 package net.Ryaas.firstmod.Networking.packet;
 
+import net.Ryaas.firstmod.util.Draining;
 import net.Ryaas.firstmod.util.ModGameLogicManager;
 import net.Ryaas.firstmod.util.Telekinesis;
 import net.Ryaas.firstmod.util.TelekinesisHandler;
@@ -48,6 +49,10 @@ public class SecondaryAbility {
                         boolean increaseDistance = player.isShiftKeyDown();
                         telekinesis.adjustEntityDistance(player, increaseDistance);
                     }
+                }
+                if (playerData.contains("AbilitySet") && playerData.getInt("AbilitySet") == 2) {
+                    Draining.drainHealthFromTargets(player, 10.0, 2.0f, 1.0f, 0.1);
+
                 }
             }
 

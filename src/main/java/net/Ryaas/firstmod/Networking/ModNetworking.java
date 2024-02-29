@@ -113,6 +113,25 @@ public class ModNetworking {
                 .consumerMainThread(SprayPacket::handle)
                 .add();
 
+        net.messageBuilder(HealthDrain.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(HealthDrain::decode)
+                .encoder(HealthDrain::encode)
+                .consumerMainThread(HealthDrain::handle)
+                .add();
+
+        net.messageBuilder(Swirl.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(Swirl::decode)
+                .encoder(Swirl::encode)
+                .consumerMainThread(Swirl::handle)
+                .add();
+
+        net.messageBuilder(ParticleSpawningpacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ParticleSpawningpacket::decode)
+                .encoder(ParticleSpawningpacket::encode)
+                .consumerMainThread(ParticleSpawningpacket::handle)
+                .add();
+
+
 
 
 

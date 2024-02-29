@@ -6,6 +6,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkEvent;
 
+import java.util.Random;
 import java.util.function.Supplier;
 
 public class SprayPacket {
@@ -53,23 +54,39 @@ public class SprayPacket {
         ctx.enqueueWork(() -> {
             Minecraft mc = Minecraft.getInstance();
             if (mc.level != null) {
-                // Correct the calculation of yawRadians and pitchRadians
+
+
+                final Random random = new Random();
+
                 double yawRadians = Math.toRadians(msg.yaw);
                 double pitchRadians = Math.toRadians(msg.pitch);
 
-                // Directly use Minecraft's pitch orientation
+                // Main direction of the beam
                 double dx = -Math.sin(yawRadians) * Math.cos(pitchRadians);
-                double dy = -Math.sin(pitchRadians); // Now directly translates pitch without inversion
+                double dy = -Math.sin(pitchRadians);
                 double dz = Math.cos(yawRadians) * Math.cos(pitchRadians);
                 Vec3 direction = new Vec3(dx, dy, dz);
 
-                for (int i = 0; i < msg.particleCount; i++) {
-                    double distance = 0.1 * i; // Example distance multiplier, adjust as needed
-                    Vec3 particlePos = msg.center.add(direction.scale(distance));
+                // Calculate a right vector perpendicular to the direction
+                Vec3 up = new Vec3(0, 1, 0); // World up vector
+                Vec3 right = direction.cross(up).normalize(); // Perpendicular right vector
+                Vec3 perp = right.cross(direction).normalize(); // Perpendicular vector in the plane of direction and up
 
-                    mc.level.addParticle(ParticleTypes.HAPPY_VILLAGER, particlePos.x, particlePos.y + 1, particlePos.z, 0, 0, 0);
+                for (int i = 0; i < msg.particleCount; i++) {
+                    double distance = 0.1 * i;
+                    Vec3 basePos = msg.center.add(direction.scale(distance));
+
+                    // Adding randomness perpendicular to the direction for a wider beam
+                    double spread = 0.5; // Adjust this value to control the beam's width
+                    double offsetX = (random.nextDouble() - 0.5) * spread;
+                    double offsetZ = (random.nextDouble() - 0.5) * spread;
+
+                    Vec3 particlePos = basePos.add(right.scale(offsetX)).add(perp.scale(offsetZ));
+
+                    mc.level.addParticle(ParticleTypes.GLOW, particlePos.x, particlePos.y + 1, particlePos.z, 0, 0, 0);
                 }
             }
+
         });
         ctx.setPacketHandled(true);
     }
